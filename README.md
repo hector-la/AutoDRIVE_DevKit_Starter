@@ -1,152 +1,357 @@
-AutoDRIVE - Installer & ROS 2 Bridge (AIROS) 🏎️
-This repository provides a detailed guide to installing the AutoDRIVE simulator and configuring the communication bridge between the AutoDRIVE Simulator and ROS 2 Humble. The goal is to enable control and data acquisition for the F1TENTH vehicle for robotics and autonomous navigation projects.
+# AutoDRIVE - Instalador y Puente con ROS2 (AIROS) 🏎️
 
-📋 Prerequisites
-Before starting, ensure your environment meets the following requirements:
 
-Operating System: Ubuntu 22.04
 
-Middleware: ROS 2 Humble
+Este repositorio proporciona una guía detallada para instalar el simulador AutoDrive y configurar el puente de comunicación entre el **AutoDRIVE Simulator** y **ROS 2 Humble**. El objetivo es permitir el control y la adquisición de datos del vehículo **F1TENTH** para proyectos de robótica y navegación autónoma.
 
-🕹️ 1. Simulator Installation
-Follow these steps to prepare the simulation environment:
 
-Download the compressed file (.zip) of the simulator for Linux.
 
-⬇️ Download AutoDRIVE Simulator Linux
+---
 
-Save the file in an accessible location and unzip it (e.g., ~/Downloads/AutoDRIVE_Sim).
 
-Open the terminal and navigate to the folder where you extracted the simulator.
 
-Bash
-cd ~/Downloads/AutoDRIVE_Sim
-Grant execution permissions to the main binary:
+## 📋 Requisitos Previos
 
-Bash
-chmod +x "AutoDRIVE Simulator.x86_64"
-Start the simulator by running the following command:
 
-Bash
-./"AutoDRIVE Simulator.x86_64"
-🛠️ 2. ROS 2 BRIDGE (DEVKIT)
-2.1 Workspace and Virtual Environment Setup
-To avoid conflicts between the library versions required by the Devkit and the system defaults (Ubuntu 22.04), we will use a Virtual Environment (venv). This isolates the Python dependencies within a controlled environment.
 
-2.2 Create Workspace
-Run the following commands to create the folder structure:
+Antes de comenzar, asegúrate de contar con el siguiente entorno:
 
-Bash
+
+
+* **Sistema Operativo:** ([Ubuntu 22.04](https://github.com/widegonz/Ubuntu-Installation))
+
+* **Middleware:** ([ROS 2 Humble](https://docs.ros.org/en/humble/Installation.html))
+
+
+
+---
+
+
+
+
+
+
+
+## 🕹️ 1. Instalación del Simulador
+
+
+
+Sigue estos pasos para preparar el entorno de simulación:
+
+
+
+1. **Descarga** el archivo comprimido (.zip) del simulador para Linux.
+
+* ⬇️ [Descargar AutoDRIVE Simulator Linux](https://github.com/Tinker-Twins/AutoDRIVE/releases/download/Simulator-0.3.0/AutoDRIVE_Simulator_Linux.zip**)
+
+   
+
+3. **Guarda** el archivo en un lugar de fácil acceso y **descomprímelo** (ej. `~/Downloads/AutoDRIVE_Sim`).
+
+
+
+4. **Accede a la terminal** y dirígete a la carpeta donde descomprimiste el simulador.
+
+   ```bash
+
+   cd ~/Downloads/AutoDRIVE_Sim
+
+5. Otorga permisos de ejecución al binario principal:
+
+      ```bash
+
+   chmod +x "AutoDRIVE Simulator.x86_64"
+
+6. Inicia el simulador ejecutando el siguiente comando en la terminal:
+
+     ```bash
+
+   ./"AutoDRIVE Simulator.x86_64"
+
+
+
+## 🛠️ 2. PUENTE CON ROS2 (DEVKIT)
+
+
+
+
+
+### 2.1 Configuración del Workspace y Entorno Virtual
+
+
+
+Para evitar conflictos entre las versiones de librerías requeridas por el Devkit y las del sistema (Ubuntu 22.04), utilizaremos un **Entorno Virtual (venv)**. Esto permite aislar las dependencias de Python 3.8 en un entorno controlado.
+
+
+
+### 2.2 Crear Espacio de Trabajo
+
+Ejecuta los siguientes comandos para crear la estructura de carpetas:
+
+
+
+   ```bash
+
 mkdir -p ~/autodrive_ws/src
-cd ~/autodrive_ws
-2.3 Configure the Virtual Environment (venv)
-2.3.1 Create and activate the environment inside your workspace root:
 
-Bash
-# Create the environment
+cd ~/autodrive_ws
+
+```
+
+### 2.3 Configurar el Entorno Virtual (venv)
+
+2.3.1 Crea y activa el entorno dentro de la raíz de tu workspace:
+
+   ```bash
+
+# Crear el entorno
+
 python3 -m venv venv
 
-# Activate the environment (You must do this in every new terminal)
+
+
+# Activar el entorno (Debes hacer esto en cada terminal nueva)
+
 source venv/bin/activate
-2.3.2 Install Dependencies
-With the environment active (venv), install the necessary libraries using these verified versions for stability:
 
-Bash
+```
+
+2.3.2 Instalación de Dependencias
+
+
+
+Con el entorno activo (venv), instala las librerías necesarias con las versiones probadas para estabilidad:
+
+```bash
+
 pip install eventlet==0.33.3 Flask-SocketIO==4.1.0 python-socketio==4.2.0 \
-            python-engineio==3.13.0 gevent-websocket==0.10.1 \
-            transforms3d attrdict numpy==1.23.5 opencv-contrib-python
-2.3.3 Critical Compatibility Patch
-The attrdict library has incompatibilities with collection modules in Python 3.10+. To fix the import error without affecting the global system, apply this patch directly to the files inside your venv:
 
-Bash
-# Fix Mapping import error in attrdict
+            python-engineio==3.13.0 gevent-websocket==0.10.1 \
+
+            transforms3d attrdict numpy==1.23.5 opencv-contrib-python
+
+```
+
+
+
+2.3.3 Parche de Compatibilidad Crítico
+
+
+
+La librería attrdict presenta incompatibilidades con los módulos de colecciones en Python 3.10. Para solucionar el error de importación sin afectar el sistema global, aplica el siguiente parche directamente a los archivos dentro de tu venv:
+
+```bash
+
+# Corregir error de importación de Mapping en attrdict
+
 find ~/autodrive_ws/venv/lib/python3.10/site-packages/attrdict/ -name "*.py" -exec sed -i 's/from collections import Mapping/from collections.abc import Mapping/g' {} +
 
-# Fix multiple import variants
+
+
+# Corregir variantes de importación múltiple
+
 find ~/autodrive_ws/venv/lib/python3.10/site-packages/attrdict/ -name "*.py" -exec sed -i 's/from collections import Mapping, MutableMapping, Sequence/from collections.abc import Mapping, MutableMapping, Sequence/g' {} +
-2.4 Cloning and Organizing the Workspace
-To ensure ROS 2 compiles correctly, we must extract only the necessary metapackage from the official repository and remove redundant files.
 
-Cloning the Repository:
-Navigate to your workspace source folder and clone the Devkit:
 
-Bash
+
+```
+
+
+
+
+
+### 2.4 Clonación y Organización del Workspace
+
+
+
+Para que ROS 2 compile correctamente, debemos extraer únicamente el metapaquete necesario del repositorio oficial y limpiar los archivos redundantes.
+
+
+
+### Clonación del Repositorio
+
+Dirígete a la carpeta de código de tu espacio de trabajo y clona el Devkit:
+
+
+
+```bash
+
 cd ~/autodrive_ws/src
-git clone --single-branch --branch AutoDRIVE-Devkit https://github.com/Tinker-Twins/AutoDRIVE.git
-Extraction and Cleanup:
-To avoid duplicate package errors during compilation, move the ROS 2 folder to the src root and delete the rest of the repository:
 
-Bash
-# Move the ROS 2 metapackage
+git clone --single-branch --branch AutoDRIVE-Devkit [https://github.com/Tinker-Twins/AutoDRIVE.git](https://github.com/Tinker-Twins/AutoDRIVE.git)
+
+```
+
+
+
+Extracción y Limpieza
+
+
+
+Para evitar errores de paquetes duplicados durante la compilación, mueve la carpeta de ROS 2 a la raíz de src y elimina el resto del repositorio:
+
+```bash
+
+# Mover el metapaquete de ROS 2
+
 mv ~/autodrive_ws/src/AutoDRIVE/ADSS\ Toolkit/autodrive_ros2 ~/autodrive_ws/src/
 
-# Delete the original repository to avoid conflicts
-rm -rf ~/autodrive_ws/src/AutoDRIVE
-2.5 Compiling the Workspace
-Once the src folder is organized, proceed to build the packages. Ensure the virtual environment is active so ROS recognizes the installed Python dependencies.
 
-Bash
-# Return to workspace root
+
+# Eliminar el repositorio original para evitar conflictos
+
+rm -rf ~/autodrive_ws/src/AutoDRIVE
+
+```
+
+
+
+### 2.5 Compilación del Workspace
+
+
+
+Una vez organizada la carpeta src, procedemos a construir los paquetes. Asegúrate de tener el entorno virtual activo para que ROS reconozca las dependencias de Python instaladas.
+
+```bash
+
+
+
+# Regresar a la raíz del workspace
+
 cd ~/autodrive_ws
 
-# Activate environment and load ROS 2
+
+
+# Activar entorno y cargar ROS 2
+
 source venv/bin/activate
+
 source /opt/ros/humble/setup.bash
 
-# Compile
+
+
+# Compilar
+
 colcon build --symlink-install
 
-# Source the newly compiled workspace configuration
+
+
+# Cargar la configuración del workspace recién compilado
+
 source install/setup.bash
-🚀 3. Execution and Teleoperation
-To start the system, follow this order strictly. We recommend opening independent terminals for each process.
 
-Step 1: Start the Communication Bridge
-You have two modes depending on whether you need sensor visualization or want to save system resources:
+```
 
-Option A: Bridge with Visualization (RViz)
-Use this to see the LiDAR, camera feed, and the vehicle's 3D model while driving.
 
-Bash
+
+
+
+## 🚀 4. Ejecución y Teleoperación
+
+
+
+Para poner en marcha el sistema, sigue este orden estrictamente. Recomendamos abrir terminales independientes para cada proceso.
+
+
+
+### Paso 1: Iniciar el Puente de Comunicación (Bridge)
+
+Tienes dos modalidades dependiendo de si necesitas visualizar los sensores o prefieres ahorrar recursos del sistema:
+
+
+
+**Opción A: Puente con Visualización (RViz)** Usa esta opción para ver el LIDAR, la cámara y el modelo 3D del vehículo mientras conduces.
+
+```bash
+
 cd ~/autodrive_ws
+
 source venv/bin/activate
+
 source /opt/ros/humble/setup.bash
+
 source install/setup.bash
+
 export PYTHONUNBUFFERED=1
-# Launches the bridge and opens RViz automatically
+
+# Lanza el puente y abre RViz automáticamente
+
 ros2 launch autodrive_f1tenth simulator_bringup_rviz.launch.py
-Option B: Simple Bridge (Headless)
-Use this if you only want to teleoperate the car without the graphical overhead of RViz.
 
-Bash
+```
+
+***Opción B: Puente Simple (Headless)*** Usa esta opción si solo quieres teleoperar el carro sin la carga gráfica de RViz.
+
+```bash
+
+
+
 cd ~/autodrive_ws
+
 source venv/bin/activate
+
 source /opt/ros/humble/setup.bash
+
 source install/setup.bash
+
 export PYTHONUNBUFFERED=1
-# Launches only the communication bridge
+
+# Lanza únicamente el puente de comunicación
+
 ros2 launch autodrive_f1tenth simulator_bringup_headless.launch.py
-Step 2: Run the Simulator
-Open a new terminal and launch the simulator:
 
-Bash
-cd ~/Downloads/AutoDRIVE_Sim  # Adjust path to your folder
+```
+
+
+
+### Paso 2: Ejecutar el Simulador
+
+
+
+Abre una nueva terminal y lanza el simulador con el siguiente comando:
+
+```bash
+
+cd ~/Downloads/AutoDRIVE_Sim  # Ajusta la ruta a tu carpeta
+
 ./"AutoDRIVE Simulator.x86_64"
-Actions in the simulator:
 
-Click the antenna button (Disconnected) until it changes to Connected.
+  ```
 
-Verify that the driving mode is set to Autonomous.
+Acciones en el simulador:
 
-Step 3: Keyboard Control (Teleoperation)
-In a new terminal, run the node to control the car using keys:
 
-Bash
+
+    Haz clic en el botón de la antena (Disconnected) hasta que cambie a Connected.
+
+
+
+    Verifica que el modo de manejo esté en Autonomous.
+
+
+
+### Paso 3: Control por Teclado (Teleoperacion)
+
+
+
+En una nueva terminal, ejecuta el nodo para controlar el carro con las teclas:
+
+```bash
+
 cd ~/autodrive_ws
-source venv/bin/activate
-source /opt/ros/humble/setup.bash
-source install/setup.bash
-ros2 run autodrive_f1tenth teleop_keyboard
-Controls: W (Accelerate), S (Reverse), A (Left), D (Right), X (Brake).
 
-Note: You must keep this terminal window selected/focused for the vehicle to respond to keystrokes.
+source venv/bin/activate
+
+source /opt/ros/humble/setup.bash
+
+source install/setup.bash
+
+ros2 run autodrive_f1tenth teleop_keyboard
+
+```
+
+Controles: W (Acelerar), S (Rretroceder), A (Izquierda), D (Derecha), X(Frenar).
+
+
+
+Nota: Debes mantener seleccionada esta terminal para que el vehículo responda a las teclas.
