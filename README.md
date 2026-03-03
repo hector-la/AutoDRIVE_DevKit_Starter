@@ -21,7 +21,7 @@ Sigue estos pasos para preparar el entorno de simulación:
    
 2. **Guarda** el archivo en un lugar de fácil acceso y **descomprímelo** (ej. `~/Downloads/AutoDRIVE_Sim`).
 
-3. **Accede a la terminal** y dirígete a la carpeta donde descomprimiste el simulador. Ejemplo:
+3. **Accede a la terminal** y dirígete a la carpeta donde descomprimiste el simulador.
    ```bash
    cd ~/Downloads/AutoDRIVE_Sim
 4. Otorga permisos de ejecución al binario principal:
