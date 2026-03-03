@@ -8,8 +8,8 @@ Este repositorio proporciona una guía detallada para instalar el simulador Auto
 
 Antes de comenzar, asegúrate de contar con el siguiente entorno:
 
-* **Sistema Operativo:** Ubuntu 22.04 
-* **Middleware:** ROS 2 Humble Hawksbill.
+* **Sistema Operativo:** Ubuntu 22.04 ([https://releases.ubuntu.com/22.04/](https://github.com/widegonz/Ubuntu-Installation))
+* **Middleware:** ROS 2 Humble. ([https://releases.ubuntu.com/22.04/](https://docs.ros.org/en/humble/Installation.html))
 
 ---
 
