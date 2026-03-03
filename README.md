@@ -31,7 +31,7 @@ Sigue estos pasos para preparar el entorno de simulación:
      ```bash
    ./"AutoDRIVE Simulator.x86_64"
 
-## 🛠️ 2. DEVKIT ROS2
+## 🛠️ 2. PUENTE CON ROS2(DEVKIT)
 
 ### 2.1 Configuración del Workspace y Entorno Virtual
 
