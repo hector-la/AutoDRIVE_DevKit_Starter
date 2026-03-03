@@ -116,4 +116,63 @@ colcon build --symlink-install
 source install/setup.bash
 ```
 
+## 🚀 4. Ejecución y Teleoperación
+
+## 🚀 4. Ejecución y Teleoperación
+
+Para poner en marcha el sistema, sigue este orden estrictamente. Recomendamos abrir terminales independientes para cada proceso.
+
+### Paso 1: Iniciar el Puente de Comunicación (Bridge)
+Tienes dos modalidades dependiendo de si necesitas visualizar los sensores o prefieres ahorrar recursos del sistema:
+
+**Opción A: Puente con Visualización (RViz)** Usa esta opción para ver el LIDAR, la cámara y el modelo 3D del vehículo mientras conduces.
+```bash
+cd ~/autodrive_ws
+source venv/bin/activate
+source /opt/ros/humble/setup.bash
+source install/setup.bash
+export PYTHONUNBUFFERED=1
+# Lanza el puente y abre RViz automáticamente
+ros2 launch autodrive_f1tenth simulator_bringup_rviz.launch.py
+```
+***Opción B: Puente Simple (Headless)*** Usa esta opción si solo quieres teleoperar el carro sin la carga gráfica de RViz.
+```bash
+
+cd ~/autodrive_ws
+source venv/bin/activate
+source /opt/ros/humble/setup.bash
+source install/setup.bash
+export PYTHONUNBUFFERED=1
+# Lanza únicamente el puente de comunicación
+ros2 launch autodrive_f1tenth simulator_bringup_headless.launch.py
+```
+
+### Paso 2: Ejecutar el Simulador
+
+Abre una nueva terminal y lanza el simulador con el siguiente comando:
+```bash
+cd ~/Downloads/AutoDRIVE_Sim  # Ajusta la ruta a tu carpeta
+./"AutoDRIVE Simulator.x86_64"
+  ```
+Acciones en el simulador:
+
+    Selecciona el vehículo F1TENTH.
+
+    Haz clic en el botón de la antena (Disconnected) hasta que cambie a Connected (Verde).
+
+    Verifica que el modo de manejo esté en Autonomous (puedes alternar con la tecla M).
+
+###Paso 3: Control por Teclado (Teleop)
+
+En una nueva terminal, ejecuta el nodo para controlar el carro con las teclas:
+```bash
+cd ~/autodrive_ws
+source venv/bin/activate
+source /opt/ros/humble/setup.bash
+source install/setup.bash
+ros2 run autodrive_f1tenth teleop_keyboard
+```
+Controles: W (Acelerar), S (Rretroceder), A (Izquierda), D (Derecha), X(Frenar).
+
+Nota: Debes mantener seleccionada esta terminal para que el vehículo responda a las teclas.
 
