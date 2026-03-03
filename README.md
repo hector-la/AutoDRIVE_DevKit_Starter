@@ -18,7 +18,7 @@ Antes de comenzar, asegúrate de contar con el siguiente entorno:
 Sigue estos pasos para preparar el entorno de simulación:
 
 1. **Descarga** el archivo comprimido (.zip o .tar.gz) del simulador para Linux.
-   * ⬇️ **[Descargar AutoDRIVE Simulator (Linux)]([https://github.com/Tinker-Twins/AutoDRIVE/releases/download/v0.2.0/AutoDRIVE_Simulator_Linux.zip](https://github.com/Tinker-Twins/AutoDRIVE/releases/download/Simulator-0.3.0/AutoDRIVE_Simulator_Linux.zip))** 
+* ⬇️ **[Descargar AutoDRIVE Simulator v0.2.0](https://github.com/Tinker-Twins/AutoDRIVE/releases/download/Simulator-0.3.0/AutoDRIVE_Simulator_Linux.zip)** *(O revisa la versión más reciente en el [Repositorio Oficial](https://github.com/Tinker-Twins/AutoDRIVE/releases))*
    
 3. **Guarda** el archivo en un lugar de fácil acceso y **descomprímelo** (ej. `~/Downloads/AutoDRIVE_Sim`).
 
