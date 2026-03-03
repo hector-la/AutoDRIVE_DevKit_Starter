@@ -6,7 +6,7 @@ Este repositorio proporciona una guía detallada para instalar el simulador Auto
 
 ## 📋 Requisitos Previos
 
-Antes de comenzar, asegúrate de contar con el siguiente entorno (probado en **ASUS TUF Gaming A15**):
+Antes de comenzar, asegúrate de contar con el siguiente entorno:
 
 * **Sistema Operativo:** Ubuntu 22.04 
 * **Middleware:** ROS 2 Humble Hawksbill.
@@ -33,18 +33,18 @@ Sigue estos pasos para preparar el entorno de simulación:
 
 ## 🛠️ 2. DEVKIT ROS2
 
-**Configuración del Workspace y Entorno Virtual**
+**2.1Configuración del Workspace y Entorno Virtual**
 
 Para evitar conflictos entre las versiones de librerías requeridas por el Devkit y las del sistema (Ubuntu 22.04), utilizaremos un **Entorno Virtual (venv)**. Esto permite aislar las dependencias de Python 3.8 en un entorno controlado.
 
-### Crear Espacio de Trabajo
+### 2.2Crear Espacio de Trabajo
 Ejecuta los siguientes comandos para crear la estructura de carpetas:
 
    ```bash
 mkdir -p ~/autodrive_ws/src
 cd ~/autodrive_ws
 ```
-### Configurar el Entorno Virtual (venv)
+### 2.3Configurar el Entorno Virtual (venv)
 ```bash
 Crea y activa el entorno dentro de la raíz de tu workspace:
 # Crear el entorno
@@ -62,7 +62,7 @@ pip install eventlet==0.33.3 Flask-SocketIO==4.1.0 python-socketio==4.2.0 \
             transforms3d attrdict numpy==1.23.5 opencv-contrib-python
 ```
 
-🔧 3. Parche de Compatibilidad Crítico
+Parche de Compatibilidad Crítico
 
 La librería attrdict presenta incompatibilidades con los módulos de colecciones en Python 3.10. Para solucionar el error de importación sin afectar el sistema global, aplica el siguiente parche directamente a los archivos dentro de tu venv:```bash
 ```bash
@@ -73,4 +73,47 @@ find ~/autodrive_ws/venv/lib/python3.10/site-packages/attrdict/ -name "*.py" -ex
 find ~/autodrive_ws/venv/lib/python3.10/site-packages/attrdict/ -name "*.py" -exec sed -i 's/from collections import Mapping, MutableMapping, Sequence/from collections.abc import Mapping, MutableMapping, Sequence/g' {} +
 
 ```
+
+## 2.4 Clonación y Organización del Workspace
+
+Para que ROS 2 compile correctamente, debemos extraer únicamente el metapaquete necesario del repositorio oficial y limpiar los archivos redundantes.
+
+### Clonación del Repositorio
+Dirígete a la carpeta de código de tu espacio de trabajo y clona el Devkit:
+
+```bash
+cd ~/autodrive_ws/src
+git clone --single-branch --branch AutoDRIVE-Devkit [https://github.com/Tinker-Twins/AutoDRIVE.git](https://github.com/Tinker-Twins/AutoDRIVE.git)
+```
+Extracción y Limpieza
+
+Para evitar errores de paquetes duplicados durante la compilación, mueve la carpeta de ROS 2 a la raíz de src y elimina el resto del repositorio:
+```bash
+# Mover el metapaquete de ROS 2
+mv ~/autodrive_ws/src/AutoDRIVE/ADSS\ Toolkit/autodrive_ros2 ~/autodrive_ws/src/
+
+# Eliminar el repositorio original para evitar conflictos
+rm -rf ~/autodrive_ws/src/AutoDRIVE
+```
+
+
+## 2.5 Compilación del Workspace
+
+Una vez organizada la carpeta src, procedemos a construir los paquetes. Asegúrate de tener el entorno virtual activo para que ROS reconozca las dependencias de Python instaladas.
+```bash
+
+# Regresar a la raíz del workspace
+cd ~/autodrive_ws
+
+# Activar entorno y cargar ROS 2
+source venv/bin/activate
+source /opt/ros/humble/setup.bash
+
+# Compilar
+colcon build --symlink-install
+
+# Cargar la configuración del workspace recién compilado
+source install/setup.bash
+```
+
 
