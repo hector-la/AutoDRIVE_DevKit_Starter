@@ -319,7 +319,6 @@ Note: You must keep this terminal window selected/focused for the vehicle to res
 # 🤝 Contributing
 Contributions are welcome! If you have a suggestion that would make this better, please fork the repo and create a pull request.
 
-
- ✉️ Contact
-Hector La Mota - [LinkedIn](https://www.linkedin.com/in/h%C3%A9ctor-la-mota-5a9b7a2a8/)]  
+✉️ Contact
+Hector La Mota - [LinkedIn](https://www.linkedin.com/in/h%C3%A9ctor-la-mota-5a9b7a2a8/)
 **AIROS - ESPOL**
