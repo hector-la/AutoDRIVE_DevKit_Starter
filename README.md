@@ -1,8 +1,8 @@
-# AutoDRIVE - Instalador y Puente con ROS2 (AIROS) 🏎️
+# AutoDRIVE - Installer & ROS 2 Bridge (AIROS) 🏎️
 
 
 
-Este repositorio proporciona una guía detallada para instalar el simulador AutoDrive y configurar el puente de comunicación entre el **AutoDRIVE Simulator** y **ROS 2 Humble**. El objetivo es permitir el control y la adquisición de datos del vehículo **F1TENTH** para proyectos de robótica y navegación autónoma.
+This repository provides a detailed guide to installing the AutoDRIVE simulator and configuring the communication bridge between the AutoDRIVE Simulator and ROS 2 Humble. The goal is to enable control and data acquisition for the F1TENTH vehicle for robotics and autonomous navigation projects.
 
 
 
@@ -10,15 +10,14 @@ Este repositorio proporciona una guía detallada para instalar el simulador Auto
 
 
 
-## 📋 Requisitos Previos
+## 📋 Prerequisites
 
 
 
-Antes de comenzar, asegúrate de contar con el siguiente entorno:
+Before starting, ensure your environment meets the following requirements:
 
 
-
-* **Sistema Operativo:** ([Ubuntu 22.04](https://github.com/widegonz/Ubuntu-Installation))
+* **Operating System:** ([Ubuntu 22.04](https://github.com/widegonz/Ubuntu-Installation))
 
 * **Middleware:** ([ROS 2 Humble](https://docs.ros.org/en/humble/Installation.html))
 
@@ -32,37 +31,31 @@ Antes de comenzar, asegúrate de contar con el siguiente entorno:
 
 
 
-## 🕹️ 1. Instalación del Simulador
+## 🕹️ 1. Simulator Installation
 
 
 
-Sigue estos pasos para preparar el entorno de simulación:
+Follow these steps to prepare the simulation environment:
 
 
+1. **Download** the compressed file (.zip) of the simulator for Linux. 
+* ⬇️ [Download AutoDRIVE Simulator Linux](https://github.com/Tinker-Twins/AutoDRIVE/releases/download/Simulator-0.3.0/AutoDRIVE_Simulator_Linux.zip**)
 
-1. **Descarga** el archivo comprimido (.zip) del simulador para Linux.
+2. **Save** the file in an accessible location and unzip it (e.g., ~/Downloads/AutoDRIVE_Sim).
 
-* ⬇️ [Descargar AutoDRIVE Simulator Linux](https://github.com/Tinker-Twins/AutoDRIVE/releases/download/Simulator-0.3.0/AutoDRIVE_Simulator_Linux.zip**)
-
-   
-
-3. **Guarda** el archivo en un lugar de fácil acceso y **descomprímelo** (ej. `~/Downloads/AutoDRIVE_Sim`).
-
-
-
-4. **Accede a la terminal** y dirígete a la carpeta donde descomprimiste el simulador.
+3. **Open the terminal** and navigate to the folder where you extracted the simulator.
 
    ```bash
 
    cd ~/Downloads/AutoDRIVE_Sim
 
-5. Otorga permisos de ejecución al binario principal:
+4. Grant execution permissions to the main binary:
 
       ```bash
 
    chmod +x "AutoDRIVE Simulator.x86_64"
 
-6. Inicia el simulador ejecutando el siguiente comando en la terminal:
+5. Start the simulator by running the following command:
 
      ```bash
 
