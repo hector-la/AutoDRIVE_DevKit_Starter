@@ -118,6 +118,23 @@ pip install eventlet==0.33.3 Flask-SocketIO==4.1.0 python-socketio==4.2.0 \
 
 ```
 
+2.3.3 Critical Compatibility Patch
+
+
+The attrdict library has incompatibilities with collection modules in Python 3.10+. To fix the import error without affecting the global system, apply this patch directly to the files inside your venv:
+```bash
+
+# Fix Mapping import error in attrdict
+find ~/autodrive_ws/venv/lib/python3.10/site-packages/attrdict/ -name "*.py" -exec sed -i 's/from collections import Mapping/from collections.abc import Mapping/g' {} +
+
+
+
+# Fix multiple import variants
+find ~/autodrive_ws/venv/lib/python3.10/site-packages/attrdict/ -name "*.py" -exec sed -i 's/from collections import Mapping, MutableMapping, Sequence/from collections.abc import Mapping, MutableMapping, Sequence/g' {} +
+
+
+
+```
 
 
 
