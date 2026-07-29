@@ -107,18 +107,39 @@ source venv/bin/activate
 
 2.3.2 Install Dependencies
 
-With the environment active (venv), install the necessary libraries using these verified versions for stability:
+With the environment active (venv), install the necessary libraries using these verified versions for stability. This also installs `colcon` **inside the venv** (important — see note below) and `Pillow`, which the bridge imports directly but which is not declared anywhere in the upstream AutoDRIVE devkit:
 ```bash
+
+pip install --upgrade pip
 
 pip install eventlet==0.33.3 Flask-SocketIO==4.1.0 python-socketio==4.2.0 \
 
             python-engineio==3.13.0 gevent-websocket==0.10.1 \
 
-            transforms3d attrdict numpy==1.23.5 opencv-contrib-python
+            transforms3d attrdict numpy==1.23.5 opencv-contrib-python \
+
+            colcon-common-extensions Pillow
+
+# Flask-SocketIO 4.1.0 needs an old Flask; unpinned, pip resolves to the
+# latest Flask/Jinja2, which removed APIs Flask-SocketIO 4.x still uses.
+pip install Flask==1.1.1 Jinja2==3.0.3 itsdangerous==2.0.1 Werkzeug==2.0.3 MarkupSafe==2.0.1
 
 ```
 
-2.3.3 Critical Compatibility Patch
+> ⚠️ **Do NOT create the venv with `--system-site-packages`.** It sounds convenient (it would let the venv "see" system-installed packages), but in practice it silently pulls in whatever versions of `Flask`/`numpy`/etc. your *other* Python projects have installed globally or in `~/.local`, which is exactly the version conflict this venv exists to avoid. A fully isolated venv works fine here: ROS 2 packages (`rclpy`, etc.) are still visible because `source /opt/ros/humble/setup.bash` exports `PYTHONPATH` pointing at them directly — that's independent of the venv's isolation setting.
+
+**Why install `colcon` inside the venv?** If you only `apt install python3-colcon-common-extensions` (the usual way) and then `colcon build` while the venv is active, `colcon` itself still runs under the **system** Python (that's where the `colcon` executable lives), not your venv's Python. The scripts it generates for `autodrive_incoming_bridge` / `autodrive_outgoing_bridge` get hardcoded with the shebang `#!/usr/bin/python3` — the system interpreter — regardless of which venv is "active" in your shell. At runtime those scripts then can't find `attrdict`, `gevent`, etc., because those only exist in the venv's `site-packages`, and a shebang is an absolute path that ignores `$PATH`/venv activation entirely. Installing `colcon-common-extensions` **inside** the venv (as done above) makes `colcon build` run with the venv's Python, so the generated scripts get the correct shebang (`.../venv/bin/python3`) from the start.
+
+2.3.3 Exclude the venv from colcon's build scan
+
+`colcon build` recursively scans the whole workspace for packages, including `venv/`. Some libraries (e.g. `setuptools`) ship internal test fixtures with their own `setup.py`, which colcon can mistakenly try to build as a real package. Mark the venv as ignored:
+```bash
+
+touch ~/autodrive_ws/venv/COLCON_IGNORE
+
+```
+
+2.3.4 Critical Compatibility Patch
 
 
 The attrdict library has incompatibilities with collection modules in Python 3.10+. To fix the import error without affecting the global system, apply this patch directly to the files inside your venv:
@@ -186,7 +207,7 @@ rm -rf ~/autodrive_ws/src/AutoDRIVE
 
 
 
-Once the src folder is organized, proceed to build the packages. Ensure the virtual environment is active so ROS recognizes the installed Python dependencies.
+Once the src folder is organized, proceed to build the packages. Make sure the venv is active — this ensures `colcon` (installed in step 2.3.2, inside the venv) is the one that runs, so the compiled scripts point to the venv's Python instead of the system's.
 ```bash
 
 
@@ -212,6 +233,14 @@ colcon build --symlink-install
 source install/setup.bash
 
 ```
+
+**Sanity check:** confirm the build actually picked up the venv's Python before moving on:
+```bash
+
+head -1 ~/autodrive_ws/install/autodrive_f1tenth/lib/autodrive_f1tenth/autodrive_incoming_bridge
+
+```
+This should print `#!/home/<you>/autodrive_ws/venv/bin/python3`. If it instead prints `#!/usr/bin/python3`, `colcon` ran with the system Python — re-check that `colcon-common-extensions` is installed in the venv (step 2.3.2) and that the venv is active (`which colcon` should point inside `~/autodrive_ws/venv/bin/`), then remove stale artifacts and rebuild: `rm -rf ~/autodrive_ws/{build,install,log} && colcon build --symlink-install`.
 
 
 
