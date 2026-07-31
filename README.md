@@ -271,6 +271,7 @@ To start the system, follow this order strictly. We recommend opening independen
 ### Step 1: Start the Communication Bridge
 You have two modes depending on whether you need sensor visualization or want to save system resources:
 
+> `PYTHONUNBUFFERED=1` below is **optional, not required** — the bridge works identically without it. `ros2 launch` pipes each node's output rather than attaching it to a real terminal, so Python buffers it by default and log/error messages can appear delayed or grouped together. Setting this makes them show up immediately, which helps while debugging, but skipping it doesn't break anything.
 
 **Option A: Bridge with Visualization (RViz)**
 Use this to see the LiDAR, camera feed, and the vehicle's 3D model while driving.
@@ -284,7 +285,7 @@ source /opt/ros/humble/setup.bash
 
 source install/setup.bash
 
-export PYTHONUNBUFFERED=1
+export PYTHONUNBUFFERED=1  # optional, see note above
 
 # Launches the bridge and opens RViz automatically
 ros2 launch autodrive_f1tenth simulator_bringup_rviz.launch.py
@@ -305,7 +306,7 @@ source /opt/ros/humble/setup.bash
 
 source install/setup.bash
 
-export PYTHONUNBUFFERED=1
+export PYTHONUNBUFFERED=1  # optional, see note above
 
 # Launches only the communication bridge
 ros2 launch autodrive_f1tenth simulator_bringup_headless.launch.py
