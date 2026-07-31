@@ -1,0 +1,32 @@
+# AutoDRIVE F1TENTH bridge — verified working set (Ubuntu 22.04, Python 3.10, ROS 2 Humble)
+#
+# Includes colcon-common-extensions on purpose: it must be installed INSIDE this venv
+# (not via apt) so `colcon build` runs with the venv's Python. Otherwise the ROS 2
+# entrypoint scripts get generated with the system Python's shebang and can't find
+# the packages below at runtime. See README section 2.3 for the full explanation.
+
+# --- AutoDRIVE devkit <-> simulator communication bridge ---
+eventlet==0.33.3
+Flask-SocketIO==4.1.0
+python-socketio==4.2.0
+python-engineio==3.13.0
+gevent-websocket==0.10.1
+
+# --- Flask stack pinned to match Flask-SocketIO 4.1.0 ---
+# (left unpinned, pip resolves to a modern Flask/Jinja2 that removed APIs
+# Flask-SocketIO 4.x still imports, e.g. `flask._request_ctx_stack`)
+Flask==1.1.1
+Jinja2==3.0.3
+itsdangerous==2.0.1
+Werkzeug==2.0.3
+MarkupSafe==2.0.1
+
+# --- Numeric / vehicle data ---
+transforms3d
+attrdict
+numpy==1.23.5
+opencv-contrib-python
+Pillow          # imported directly by autodrive_incoming_bridge; not declared upstream
+
+# --- Build tooling, installed inside the venv (see note above) ---
+colcon-common-extensions
