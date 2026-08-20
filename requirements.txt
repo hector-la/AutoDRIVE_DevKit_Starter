@@ -30,3 +30,13 @@ Pillow          # imported directly by autodrive_incoming_bridge; not declared u
 
 # --- Build tooling, installed inside the venv (see note above) ---
 colcon-common-extensions
+
+# Pinned on purpose: setuptools >58.2.0 renamed ament_python's --script-dir
+# build flag to --script_dir (underscore) and silently ignores the old
+# dash-separated one instead of erroring — colcon build "succeeds" with no
+# error, but console_scripts entrypoints (ros2 run <pkg> <node>) land in the
+# venv's plain bin/ instead of install/<pkg>/lib/<pkg>/, so ROS 2 can't find
+# them at all. This is a well-known ROS 2 Humble compatibility issue, not
+# specific to this bridge — affects any ament_python package you add later
+# under src/ too. See README section 2.6 for the troubleshooting symptom.
+setuptools==58.2.0

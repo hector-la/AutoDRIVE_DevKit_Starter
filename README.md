@@ -258,6 +258,17 @@ head -1 ~/autodrive/f1tenth_ws/install/autodrive_f1tenth/lib/autodrive_f1tenth/a
 ```
 This should print `#!/home/<you>/autodrive/f1tenth_ws/venv/bin/python3`. If it instead prints `#!/usr/bin/python3`, `colcon` ran with the system Python — re-check that `colcon-common-extensions` is installed in the venv (step 2.2) and that the venv is active (`which colcon` should point inside `~/autodrive/f1tenth_ws/venv/bin/`), then remove stale artifacts and rebuild: `rm -rf ~/autodrive/f1tenth_ws/{build,install,log} && colcon build --symlink-install`.
 
+**A different symptom, same root category — missing executables, not a wrong shebang:** if `colcon build` reports `Finished <<< <package>` with no errors, but `install/<package>/lib/<package>/` doesn't even exist (so `ros2 run <package> <node>` fails with nothing to find), check for this warning in the build output:
+```text
+UserWarning: Usage of dash-separated 'script-dir' will not be supported in future versions. Please use the underscore name 'script_dir' instead
+```
+That's `setuptools` >58.2.0 silently ignoring `ament_python`'s build flag instead of erroring, so it installs the generated scripts into the venv's plain `bin/` instead of where ROS 2 looks for them. `requirements.txt` already pins `setuptools==58.2.0` to prevent this from the start, but if you (or a package you added later) end up with a newer `setuptools` some other way — a stray `pip install --upgrade setuptools`, a fresh venv created before this pin existed, etc. — fix it and rebuild clean:
+```bash
+pip install setuptools==58.2.0
+rm -rf ~/autodrive/f1tenth_ws/{build,install,log}
+colcon build --symlink-install
+```
+
 
 
 
